@@ -1,0 +1,17 @@
+{
+  "name": "apk-blocker-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot that auto-deletes APK files from groups",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
