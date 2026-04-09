@@ -5,7 +5,9 @@
  * Bu fayl .env faylidan o'zgarmas qiymatlarni o'qiydi va saqlaydi
  */
 
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 /**
  * BOT TOKEN - Telegram BOT API dan olingan token
@@ -21,9 +23,9 @@ if (!TOKEN) {
  * ADMIN ID LARI - Qaysi foydalanuvchilar adminlarni blokirovka qila olmaydi
  * .env fayldan vergul bilan ajratilgan raqamlar o'qiladi
  */
-const ADMIN_IDS = (process.env.ADMIN_IDS || "")
+const ADMIN_IDS: number[] = (process.env.ADMIN_IDS || "")
   .split(",")
-  .map((id) => id.trim())
+  .map((id: string) => id.trim())
   .filter(Boolean)
   .map(Number);
 
@@ -31,7 +33,7 @@ const ADMIN_IDS = (process.env.ADMIN_IDS || "")
  * OGOHLANTIRISH XABARI - APK fayl o'chirilganda guruhda ko'rsatiladi
  * {user} o'rniga foydalanuvchi nomi qo'yiladi
  */
-const WARNING_MESSAGE =
+const WARNING_MESSAGE: string =
   process.env.WARNING_MESSAGE ||
   "⚠️ {user} tomonidan yuborilgan .apk fayl xavfsizlik sababli o'chirildi!";
 
@@ -39,22 +41,22 @@ const WARNING_MESSAGE =
  * XABAR YUBORISH - Foydalanuvchiga shaxsiy xabar yuborilsinmi?
  * Default: true
  */
-const NOTIFY_SENDER = process.env.NOTIFY_SENDER !== "false";
+const NOTIFY_SENDER: boolean = process.env.NOTIFY_SENDER !== "false";
 
 /**
  * OGOHLANTIRISH XABARINI O'CHIRISH VAQTI (sekund)
  * Guruhga yuborilgan ogohlantirish xabarini qancha vaqtdan keyin o'chirish
  */
-const AUTO_DELETE_WARNING_SEC = 10;
+const AUTO_DELETE_WARNING_SEC: number = 10;
 
 /**
  * POLLING INTERVAL - Bot har qancha millisekundda xabarlarni tekshiradi
  * Kichik raqam = tezroq javob, lekin ko'proq CPU ishlatish
  */
-const POLLING_INTERVAL = 300;
+const POLLING_INTERVAL: number = 300;
 
 // Eksport qilish
-module.exports = {
+export {
   TOKEN,
   ADMIN_IDS,
   WARNING_MESSAGE,

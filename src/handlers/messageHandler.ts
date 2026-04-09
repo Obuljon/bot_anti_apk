@@ -5,18 +5,14 @@
  * Foydalanuvchilar yuborgan xabarlarni qayta ishlaydi va APK fayllarni blokirovka qiladi
  */
 
-const { 
-  getUserName, 
-  isApkFile, 
-  canDeleteMessages 
-} = require("../utils/helpers");
-
-const { 
-  ADMIN_IDS, 
-  WARNING_MESSAGE, 
-  NOTIFY_SENDER, 
-  AUTO_DELETE_WARNING_SEC 
-} = require("../config/constants");
+import TelegramBot from "node-telegram-bot-api";
+import { getUserName, isApkFile, canDeleteMessages } from "../utils/helpers";
+import {
+  ADMIN_IDS,
+  WARNING_MESSAGE,
+  NOTIFY_SENDER,
+  AUTO_DELETE_WARNING_SEC,
+} from "../config/constants";
 
 /**
  * ASOSIY XABAR HANDLER
@@ -30,8 +26,8 @@ const {
  * 4. Xabar va ogohlantirish yuklatadi
  * 5. Foydalanuvchiga shaxsiy xabar yuboradi
  */
-function registerMessageHandler(bot) {
-  bot.on("message", async (msg) => {
+function registerMessageHandler(bot: TelegramBot): void {
+  bot.on("message", async (msg: TelegramBot.Message) => {
     // 1️⃣ XABANI LOGLASH
     // console.log("📥 YANGI XABAR KELDI!");
     // console.log("Chat ID:", msg.chat.id);
@@ -58,10 +54,10 @@ function registerMessageHandler(bot) {
     const userId = user?.id;
 
     // 5️⃣ ADMINLARGA RUXSAT BERISH
-    // if (ADMIN_IDS.length > 0 && ADMIN_IDS.includes(userId)) {
-    //   console.log(`✅ Admin APK yubordi (o'chirilmaydi)`);
-    //   return;
-    // }
+    if (userId && ADMIN_IDS.length > 0 && ADMIN_IDS.includes(userId)) {
+      console.log(`✅ Admin APK yubordi (o'chirilmaydi)`);
+      return;
+    }
 
     // console.log(
     //   `🚫 APK aniqlandi → ${msg.document.file_name} | User: ${userId} | Chat: ${chatId}`
@@ -74,7 +70,7 @@ function registerMessageHandler(bot) {
         await bot.sendMessage(
           chatId,
           "⚠️ Botda xabarlarni o'chirish huquqi yo'q!\n" +
-          "Iltimos, botni admin qiling va 'Delete messages' ruxsatini yoqing."
+            "Iltimos, botni admin qiling va 'Delete messages' ruxsatini yoqing."
         );
       } catch {}
       return;
@@ -85,7 +81,8 @@ function registerMessageHandler(bot) {
       await bot.deleteMessage(chatId, messageId);
       // console.log(`✅ APK fayl o'chirildi: ${msg.document.file_name}`);
     } catch (err) {
-      console.error("❌ Delete xatosi:", err.message);
+      const error = err as Error;
+      console.error("❌ Delete xatosi:", error.message);
       return;
     }
 
@@ -101,7 +98,8 @@ function registerMessageHandler(bot) {
         bot.deleteMessage(chatId, warnMsg.message_id).catch(() => {});
       }, AUTO_DELETE_WARNING_SEC * 1000);
     } catch (err) {
-      console.error("❌ Warning yuborishda xato:", err.message);
+      const error = err as Error;
+      console.error("❌ Ogohlantirish xabari yuborishda xato:", error.message);
     }
 
     // 9️⃣ FOYDALANUVCHIGA SHAXSIY XABAR YUBORISH
@@ -109,18 +107,14 @@ function registerMessageHandler(bot) {
       try {
         await bot.sendMessage(
           userId,
-          `🚫 Siz yuborgan <b>${msg.document.file_name}</b> fayli guruhdan o'chirildi.\n\n` +
-          `Sabab: Guruhda .apk fayllar taqiqlangan.`,
-          { parse_mode: "HTML" }
+          "ℹ️ Sizning yuborgan .apk faylni guruhda o'chirildi.\n" +
+            "Iltimos, xavfsizlik qoidalariga rioya qiling."
         );
       } catch (err) {
-        // Foydalanuvchi botni block qilgan bo'lishi mumkin
-        console.log(`⚠️ Foydalanuvchiga xabar yuborilmadi (${userId})`);
+        // Xato bo'lsa, xabari chiqarmay davom etamiz
       }
     }
   });
 }
 
-module.exports = {
-  registerMessageHandler,
-};
+export { registerMessageHandler };

@@ -12,32 +12,32 @@
  * Fayl Struktura:
  * src/
  *  ├── config/
- *  │   └── constants.js      (O'zgarmas qiymatlar va konfiguratsiya)
+ *  │   └── constants.ts      (O'zgarmas qiymatlar va konfiguratsiya)
  *  ├── utils/
- *  │   └── helpers.js        (Yordamchi funksiyalar)
+ *  │   └── helpers.ts        (Yordamchi funksiyalar)
  *  ├── handlers/
- *  │   ├── messageHandler.js (APK fayllarni aniqlash va o'chirish)
- *  │   └── commandHandler.js (Botning komandalar)
- *  ├── bot.js                (Bot ishga tushirish)
- *  └── index.js              (Asosiy entry point)
+ *  │   ├── messageHandler.ts (APK fayllarni aniqlash va o'chirish)
+ *  │   └── commandHandler.ts (Botning komandalar)
+ *  ├── bot.ts                (Bot ishga tushirish)
+ *  └── index.ts              (Asosiy entry point)
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-const { initializeBot } = require("./bot");
+import { initializeBot } from "./bot";
 
 /**
  * DASTURNI ISHGA TUSHIRISH
  * Bot va barcha handlerlari yaratiladi va polling rejimida ishga tushiriladi
  */
-function main() {
-  const bot = initializeBot();
+async function main(): Promise<void> {
+  initializeBot();
 
   // Global error handling - har qanday xatolikni tutib olamiz
-  process.on("unhandledRejection", (reason) => {
+  process.on("unhandledRejection", (reason: unknown) => {
     console.error("❌ Unhandled rejection:", reason);
   });
 
-  process.on("uncaughtException", (err) => {
+  process.on("uncaughtException", (err: Error) => {
     console.error("❌ Uncaught Exception:", err);
     process.exit(1);
   });
