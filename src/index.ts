@@ -2,13 +2,13 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * APK BLOCKER BOT - ASOSIY FAYLI
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Bot nima qiladi:
  * - Telegram guruhida APK fayllarni blokirovka qiladi
  * - Unautorized foydalanuvchilar yuborgan APK larni o'chiradi
  * - Adminlarga esa APK yuborish ruxsatini beradi
  * - Xabar o'chirish xabar va shaxsiy notification yuboradi
- * 
+ *
  * Fayl Struktura:
  * src/
  *  ├── config/
@@ -28,9 +28,10 @@ import { initializeBot } from "./bot";
 /**
  * DASTURNI ISHGA TUSHIRISH
  * Bot va barcha handlerlari yaratiladi va polling rejimida ishga tushiriladi
+ * Webhook rejimida esa faqat handlerlari ro'yxatga olinadi
  */
 async function main(): Promise<void> {
-  initializeBot();
+  await initializeBot();
 
   // Global error handling - har qanday xatolikni tutib olamiz
   process.on("unhandledRejection", (reason: unknown) => {
@@ -44,4 +45,5 @@ async function main(): Promise<void> {
 }
 
 // Dasturni ishga tushirish
-main();
+void main();
+
